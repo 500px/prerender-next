@@ -15,5 +15,7 @@ install:
   - yarn build
 script:
   - pwd
+  - ls -a
+  - cd .next
   - ls
 
