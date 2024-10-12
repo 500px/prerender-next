@@ -1,5 +1,9 @@
 const graphqlQuery = async (query = "", variables = {}) => {
-  const res = await fetch("https://api.500px.com/graphql", {
+  const apiUrl = process.env.REACT_APP_API_URL;
+  if (!apiUrl) {
+    throw new Error("REACT_APP_API_URL is not defined");
+  }
+  const res = await fetch(apiUrl + '/graphql', {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

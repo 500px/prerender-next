@@ -1,5 +1,6 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import graphqlQuery from "../../lib/graphqlQuery";
+import generatePreviewImage from "../../lib/generatePreviewImage";
 
 const photoQuery = `
   query PhotoQueryRendererQuery($photoLegacyId: ID!, $resourceType: String!) {
@@ -9,7 +10,9 @@ const photoQuery = `
         legacyId
         name
         canonicalPath
-        images(sizes: [33]) {
+        width
+        height
+        images(sizes: [33, 35]) {
           id
           url
         }
@@ -17,6 +20,14 @@ const photoQuery = `
           id
           username
           displayName
+        }
+        contentStreams {
+          __typename
+          ...on ContentStreamEditorsChoice {
+            selectedBy {
+              type
+            }
+          }
         }
       }
     }
@@ -40,12 +51,12 @@ export async function generateMetadata(
   });
 
   const imageURL = flag
-    ? "https://drscdn.500px.org/photo/1101923550/q%3D80_m%3D600/v2?sig=42f235a69f34dd37b20f508d45a683594fb4722b4e1e520d9b2a721728b636ae"
+    ? await generatePreviewImage(photo)
     : photo?.images?.[0]?.url;
 
   const url = flag
-    ? `https://500px.com${photo.canonicalPath}?flag=1`
-    : `https://500px.com${photo.canonicalPath}`;
+    ? `${process.env.REACT_APP_BASE_URL}${photo.canonicalPath}?flag=1`
+    : `${process.env.REACT_APP_BASE_URL}${photo.canonicalPath}`;
 
   return {
     applicationName: "500px",
@@ -107,8 +118,23 @@ export async function generateMetadata(
   };
 }
 
-const PhotoDetail = async () => {
-  return <></>;
+const PhotoDetail = async ({
+  params,
+  searchParams,
+}: {
+  params: { id: string };
+  searchParams: { flag: string };
+}) => {
+  const { photo } = await graphqlQuery(photoQuery, {
+    photoLegacyId: params.id,
+    resourceType: "Photo",
+  });
+  const url = await generatePreviewImage(photo);
+  return (
+    <>
+      <img src={url} alt={photo.name} />
+    </>
+  );
 };
 
 export default PhotoDetail;
