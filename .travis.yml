@@ -1,12 +1,29 @@
 sudo: required
-language:  node_js
-node_js:
-  - "18.18"
 
-install:
-  - yarn
-  - yarn bulid
+language: node_js
+cache:
+  timeout: 600
+  directories:
+  - "${HOME}/bin"
+  - "${HOME}/docker-images"
 
+env:
+  global:
+    - SERVICE="prerender-next"
 
-script: "pwd && ls"
+jobs:
+  include:
+    # App build
+    - services:
+      - docker
+      node_js:
+        - 18.18
+      env:
+        - ECR_URI="669607800383.dkr.ecr.us-east-1.amazonaws.com/${SERVICE}"
+      install:
+        - yarn
+        - yarn build
+      script:
+        - pwd
+        - ls
 
