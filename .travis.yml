@@ -1,13 +1,13 @@
 sudo: required
 language:  node_js
 node_js:
-  - "18"
+  - "18.18"
 
 services:
   - docker
 
-
 before_install:
+  - npm config set progress false
   - npm install --global yarn
   - yarn --version
 
