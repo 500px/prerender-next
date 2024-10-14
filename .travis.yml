@@ -20,8 +20,9 @@ install:
 
 script:
   - mkdir prerender-next&&for i in `ls -a|tail -n +5 |grep -v prerender-next`; do mv $i prerender-next/ ; done&&tar zcf prerender-next.tar.gz prerender-next
-  - aws ecr get-login --no-include-email --region us-east-1
   - docker build . -t prerender-next
-  - docker images
-  - env
+  - docker tag prerender-next:latest 669607800383.dkr.ecr.us-east-1.amazonaws.com:latest
+  - docker tag prerender-next:latest 669607800383.dkr.ecr.us-east-1.amazonaws.com:$TRAVIS_TAG
+  - docker push 669607800383.dkr.ecr.us-east-1.amazonaws.com:latest
+  - docker push 669607800383.dkr.ecr.us-east-1.amazonaws.com:$TRAVIS_TAG
 
