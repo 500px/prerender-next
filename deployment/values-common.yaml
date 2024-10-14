@@ -1,0 +1,33 @@
+name: prerender-next
+
+hpa:
+  enabled: true
+
+container:
+  port: 3000
+  healthPath: /actuator/health
+
+readinessProbe:
+  initialDelaySeconds: 30
+
+livenessProbe:
+  initialDelaySeconds: 30
+
+ingress:
+  enabled: true
+  networkType:
+    - internet-facing
+    - internal
+  names:
+    - "prerender-next"
+
+rbac:
+  enabled: false
+
+workload: services
+
+datadog:
+  enabled: false
+
+pdb:
+  enabled: true
