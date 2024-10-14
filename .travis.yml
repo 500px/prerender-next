@@ -19,7 +19,7 @@ install:
   - yarn build
 
 script:
-  - mkdir prerender-next&&for i in `ls -a|tail -n +5 |grep -v prerender-next`; do mv $i prerender-next/ ; done&&tar zcf prerender-next.tar.gz prerender-next
+  - mkdir prerender-next&&for i in `ls -a|tail -n +5 |grep -v prerender-next|grep -v Dockerfile`; do mv $i prerender-next/ ; done&&tar zcf prerender-next.tar.gz prerender-next
   - docker build . -t prerender-next
   - docker tag prerender-next:latest 669607800383.dkr.ecr.us-east-1.amazonaws.com/prerender-next:latest&&docker push 669607800383.dkr.ecr.us-east-1.amazonaws.com/prerender-next:latest
   - if [ -n "$TRAVIS_TAG" ]; then docker tag prerender-next:latest 669607800383.dkr.ecr.us-east-1.amazonaws.com/prerender-next:$TRAVIS_TAG&&docker push 669607800383.dkr.ecr.us-east-1.amazonaws.com/prerender-next:$TRAVIS_TAG; else echo "no tag"; fi
