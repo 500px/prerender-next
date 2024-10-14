@@ -15,15 +15,5 @@ hpa:
   max: 10
   threshold: 80
 
-readinessProbe:
-  initialDelaySeconds: 30
-  periodSeconds: 5
-  timeoutSeconds: 5
-
-livenessProbe:
-  initialDelaySeconds: 30
-  periodSeconds: 5
-  timeoutSeconds: 5
-
 datadog:
   enabled: false
