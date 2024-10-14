@@ -18,7 +18,7 @@ install:
   - yarn build
 
 script:
-  - mkdir prerender-next&&for i in `ls -a|tail -n +5 |grep -v prerender-next`; do mv $i prerender-next/ ; done
+  - mkdir prerender-next&&for i in `ls -a|tail -n +5 |grep -v prerender-next`; do mv $i prerender-next/ ; done&&tar zcf prerender-next.tar.gz prerender-next
   - aws ecr get-login --no-include-email --region us-east-1
   - docker build . -t prerender-next
   - docker images
