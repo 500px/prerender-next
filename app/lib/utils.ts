@@ -1,3 +1,5 @@
+import type { CanvasRenderingContext2D } from "canvas";
+
 export function dataURItoBlob(dataURI: string) {
   // convert base64/URLEncoded data component to raw binary data held in a string
   var byteString;
@@ -17,7 +19,11 @@ export function dataURItoBlob(dataURI: string) {
   return new Blob([ia], { type: mimeString });
 }
 
-export function getLines(ctx, text: string, maxWidth: number) {
+export function getLines(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  maxWidth: number
+) {
   var words = text.split(" ");
   var lines = [];
   var currentLine = words[0];

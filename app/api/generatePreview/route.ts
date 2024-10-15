@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import graphqlQuery from "../../lib/graphqlQuery";
 import generatePreviewImage from "../../lib/generatePreviewImage";
-import photoQuery from "../../query/PhotoQuery";
+import photoAwardQuery from "../../query/PhotoAwardQuery";
 
 export async function POST(request: Request) {
   // {type: "photo", id: "1001297210"}
@@ -10,7 +10,7 @@ export async function POST(request: Request) {
   let dataURI;
 
   if (type === "photo") {
-    const { photo } = await graphqlQuery(photoQuery, {
+    const { photo } = await graphqlQuery(photoAwardQuery, {
       photoLegacyId: id,
       resourceType: "Photo",
     });

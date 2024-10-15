@@ -1,5 +1,5 @@
-const photoQuery = `
-  query PhotoQueryRendererQuery($photoLegacyId: ID!, $resourceType: String!) {
+const photoAwardQuery = `
+  query PhotoAwardQueryRendererQuery($photoLegacyId: ID!, $resourceType: String!) {
     photo: nodeByLegacyId(legacyId: $photoLegacyId, resourceType: $resourceType) {
       ... on Photo {
         id
@@ -17,9 +17,17 @@ const photoQuery = `
           username
           displayName
         }
+        contentStreams {
+          __typename
+          ...on ContentStreamEditorsChoice {
+            selectedBy {
+              type
+            }
+          }
+        }
       }
     }
   }
 `;
 
-export default photoQuery;
+export default photoAwardQuery;

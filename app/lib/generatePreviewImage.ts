@@ -3,7 +3,18 @@ import graphqlQuery from "../lib/graphqlQuery";
 import { dataURItoBlob, getLines } from "../lib/utils";
 import createPhotoMutation from "../query/CreatePhotoMutation";
 
-const generatePreviewImage = async (photo, isTemporary = false) => {
+interface Photo {
+  images: { url: string }[];
+  contentStreams: {
+    __typename: string;
+    selectedBy: { type: string };
+  }[];
+  name: string;
+}
+
+const baseUrl = "http://localhost:3000";
+
+const generatePreviewImage = async (photo: Photo, isTemporary = false) => {
   const cover = photo?.images?.[0]?.url;
   const isQuestWinner = true;
   const isFeatured =
@@ -31,7 +42,7 @@ const generatePreviewImage = async (photo, isTemporary = false) => {
   }
   ctx.drawImage(image, imageAreaWidth, 0, imageWidth, imageHeight);
 
-  const logo = await loadImage("https://dev.j79-stage.500px.net:3000/logo.svg");
+  const logo = await loadImage(`${baseUrl}/logo.svg`);
   const logoHeight = 36;
   const logoWidth = (198 / 51) * logoHeight;
   ctx.drawImage(logo, 300 - logoWidth / 2, 30, logoWidth, logoHeight);
@@ -48,19 +59,19 @@ const generatePreviewImage = async (photo, isTemporary = false) => {
   if (isQuestWinner) {
     badges.push({
       text: "Quest Winner",
-      icon: "https://dev.j79-stage.500px.net:3000/trophy.svg",
+      icon: `${baseUrl}/trophy.svg`,
     });
   }
   if (isAmbassadorPick) {
     badges.push({
       text: "Ambassador's pick",
-      icon: "https://dev.j79-stage.500px.net:3000/star.svg",
+      icon: `${baseUrl}/star.svg`,
     });
   }
   if (isFeatured) {
     badges.push({
       text: "Featured",
-      icon: "https://dev.j79-stage.500px.net:3000/featured.svg",
+      icon: `${baseUrl}/featured.svg`,
     });
   }
 

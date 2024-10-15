@@ -2,6 +2,7 @@ import type { Metadata, ResolvingMetadata } from "next";
 import graphqlQuery from "../../lib/graphqlQuery";
 import generatePreviewImage from "../../lib/generatePreviewImage";
 import photoQuery from "../../query/PhotoQuery";
+import photoAwardQuery from "../../query/PhotoAwardQuery";
 
 export async function generateMetadata(
   {
@@ -14,7 +15,7 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const flag = searchParams?.flag === "1";
-  const { photo } = await graphqlQuery(photoQuery, {
+  const { photo } = await graphqlQuery(flag ? photoAwardQuery : photoQuery, {
     photoLegacyId: params.id,
     resourceType: "Photo",
   });
@@ -95,7 +96,7 @@ const PhotoDetail = async ({
   searchParams: { flag: string };
 }) => {
   // 以下用于测试生成的预览图，后续删除
-  const { photo } = await graphqlQuery(photoQuery, {
+  const { photo } = await graphqlQuery(photoAwardQuery, {
     photoLegacyId: params.id,
     resourceType: "Photo",
   });
