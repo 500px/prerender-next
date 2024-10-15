@@ -1,0 +1,29 @@
+resources:
+  requests:
+    memory: "500Mi"
+    cpu: "500m"
+  limits:
+    memory: "1Gi"
+    cpu: 1
+
+ingress:
+  securityGroupIds:
+    - "sg-0191a56a92d275433"
+
+hpa:
+  min: 1
+  max: 10
+  threshold: 80
+
+readinessProbe:
+  initialDelaySeconds: 30
+  periodSeconds: 5
+  timeoutSeconds: 5
+
+livenessProbe:
+  initialDelaySeconds: 30
+  periodSeconds: 5
+  timeoutSeconds: 5
+
+datadog:
+  enabled: false
