@@ -5,6 +5,13 @@ hpa:
 
 container:
   port: 3000
+  healthPath: /
+
+readinessProbe:
+  initialDelaySeconds: 30
+
+livenessProbe:
+  initialDelaySeconds: 30
 
 ingress:
   enabled: true
