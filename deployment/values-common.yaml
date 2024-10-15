@@ -17,7 +17,6 @@ ingress:
   enabled: true
   networkType:
     - internet-facing
-    - internal
   names:
     - "prerender-next"
 
