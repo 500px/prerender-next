@@ -3,7 +3,7 @@ const graphqlQuery = async (query = "", variables = {}) => {
   if (!apiUrl) {
     throw new Error("REACT_APP_API_URL is not defined");
   }
-  const res = await fetch(apiUrl + '/graphql', {
+  const res = await fetch(apiUrl + "/graphql", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

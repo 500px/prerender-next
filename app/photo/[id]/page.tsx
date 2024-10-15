@@ -1,38 +1,7 @@
 import type { Metadata, ResolvingMetadata } from "next";
 import graphqlQuery from "../../lib/graphqlQuery";
 import generatePreviewImage from "../../lib/generatePreviewImage";
-
-const photoQuery = `
-  query PhotoQueryRendererQuery($photoLegacyId: ID!, $resourceType: String!) {
-    photo: nodeByLegacyId(legacyId: $photoLegacyId, resourceType: $resourceType) {
-      ... on Photo {
-        id
-        legacyId
-        name
-        canonicalPath
-        width
-        height
-        images(sizes: [33, 35]) {
-          id
-          url
-        }
-        uploader {
-          id
-          username
-          displayName
-        }
-        contentStreams {
-          __typename
-          ...on ContentStreamEditorsChoice {
-            selectedBy {
-              type
-            }
-          }
-        }
-      }
-    }
-  }
-`;
+import photoQuery from "../../query/PhotoQuery";
 
 export async function generateMetadata(
   {
@@ -51,7 +20,7 @@ export async function generateMetadata(
   });
 
   const imageURL = flag
-    ? await generatePreviewImage(photo)
+    ? await generatePreviewImage(photo, true)
     : photo?.images?.[0]?.url;
 
   const url = flag
@@ -125,11 +94,12 @@ const PhotoDetail = async ({
   params: { id: string };
   searchParams: { flag: string };
 }) => {
+  // 以下用于测试生成的预览图，后续删除
   const { photo } = await graphqlQuery(photoQuery, {
     photoLegacyId: params.id,
     resourceType: "Photo",
   });
-  const url = await generatePreviewImage(photo);
+  const url = await generatePreviewImage(photo, true);
   return (
     <>
       <img src={url} alt={photo.name} />
