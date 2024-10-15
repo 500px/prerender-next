@@ -1,5 +1,5 @@
 const graphqlQuery = async (query = "", variables = {}) => {
-  const res = await fetch("https://api.500px.com/graphql", {
+  const res = await fetch("http://graphql-gateway", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
