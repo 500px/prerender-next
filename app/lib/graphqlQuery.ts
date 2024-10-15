@@ -1,5 +1,5 @@
 const graphqlQuery = async (query = "", variables = {}) => {
-  const res = await fetch("http://graphql-gateway", {
+  const res = await fetch("http://graphql-gateway/graphql", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
