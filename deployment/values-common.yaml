@@ -1,5 +1,5 @@
 name: prerender-next
-
+roleName: eks-us-east-1-prerender-next
 hpa:
   enabled: true
 
