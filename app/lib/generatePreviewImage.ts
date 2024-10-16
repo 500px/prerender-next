@@ -128,44 +128,56 @@ const generatePreviewImage = async (photo: Photo, isTemporary = false) => {
     ctx.fillText(badge.text, containerPadding, badgeTop, containterWidth / 2);
   }
 
-  // title
-  const infoBaseBottom =
-    containterHeight - containerPadding - badgeHeight * badges.length;
-  const infoBaseTop = containerPadding + logoHeight;
-  const infoBaseCenter = (infoBaseBottom - infoBaseTop) / 2 + infoBaseTop;
-  const titleLines = getLines(ctx, photo.name, containterWidth / 2);
-  ctx.font = getFont(photo.name, baseFontSize, false);
-  ctx.fillStyle = "white";
-  ctx.textAlign = "left";
-  ctx.textBaseline = "bottom";
-  titleLines.map((text, i) => {
-    ctx.fillText(
-      text,
-      containerPadding,
-      infoBaseCenter - 12 - 32 * (titleLines.length - i - 1),
-      containterWidth / 2
-    );
-  });
-
   // uploader
   const uploaderAvatar = photo.uploader.avatar?.images?.[0]?.url;
   const uploaderName = photo.uploader?.displayName;
   const uploaderNameLeft = 88;
-  const uploaderNameMaxWidth = containterWidth / 2 - uploaderNameLeft;
-  const uploaderAvatarImage = await loadImage(uploaderAvatar);
-  const uploaderTop = infoBaseCenter;
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(containerPadding + 24, uploaderTop + 24, 24, 0, 2 * Math.PI);
-  ctx.clip();
-  ctx.drawImage(uploaderAvatarImage, containerPadding, uploaderTop, 48, 48);
-  ctx.restore();
+  const uploaderNameMaxWidth =
+    containterWidth / 2 - uploaderNameLeft - containerPadding;
   ctx.font = getFont(uploaderName, largeFontSize, true);
   ctx.textBaseline = "top";
+  const uploaderNameLines = getLines(ctx, uploaderName, uploaderNameMaxWidth);
+
+  const infoBaseBottom =
+    containterHeight - containerPadding - badgeHeight * badges.length;
+  const infoBaseTop = containerPadding + logoHeight;
+  const infoBaseCenter = (infoBaseBottom - infoBaseTop) / 2 + infoBaseTop;
+  const infoBaseLine =
+    uploaderNameLines.length >= 2 ? infoBaseCenter - 20 : infoBaseCenter;
+
+  const uploaderAvatarImage = await loadImage(uploaderAvatar);
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(containerPadding + 24, infoBaseLine + 24, 24, 0, 2 * Math.PI);
+  ctx.clip();
+  ctx.drawImage(uploaderAvatarImage, containerPadding, infoBaseLine, 48, 48);
+  ctx.restore();
+
+  uploaderNameLines.slice(0, 2).map((text, i) => {
+    const twoLineText =
+      uploaderNameLines.length > 2 ? text.slice(0, 18) + "..." : text;
+    ctx.fillText(
+      i === 0 ? text : twoLineText,
+      uploaderNameLeft,
+      infoBaseLine + 40 * i,
+      containterWidth / 2
+    );
+  });
+
+  // title
+  ctx.font = getFont(photo.name, baseFontSize, false);
+  ctx.fillStyle = "white";
+  ctx.textAlign = "left";
+  ctx.textBaseline = "bottom";
   ctx.fillText(
-    getEllipsisText(ctx, uploaderName, uploaderNameMaxWidth),
-    uploaderNameLeft,
-    uploaderTop,
+    getEllipsisText(
+      ctx,
+      photo.name,
+      containterWidth / 2 - containerPadding * 2,
+      30
+    ),
+    containerPadding,
+    infoBaseLine - 12,
     containterWidth / 2
   );
 

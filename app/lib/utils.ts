@@ -45,10 +45,11 @@ export function getLines(
 export function getEllipsisText(
   ctx: CanvasRenderingContext2D,
   text: string,
-  maxWidth: number
+  maxWidth: number,
+  maxLength: number
 ) {
   if (ctx.measureText(text).width < maxWidth) {
     return text;
   }
-  return text.slice(0, 16) + "...";
+  return text.slice(0, maxLength) + "...";
 }
