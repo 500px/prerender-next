@@ -1,4 +1,4 @@
-import { createCanvas, loadImage } from "canvas";
+import { createCanvas, loadImage, registerFont } from "canvas";
 import graphqlQuery from "../lib/graphqlQuery";
 import { dataURItoBlob, getLines } from "../lib/utils";
 import createPhotoMutation from "../query/CreatePhotoMutation";
@@ -21,6 +21,8 @@ const generatePreviewImage = async (photo: Photo, isTemporary = false) => {
     photo?.contentStreams?.[0]?.__typename === "ContentStreamEditorsChoice";
   const isAmbassadorPick =
     photo?.contentStreams?.[0]?.selectedBy?.type === "AMBASSADOR";
+
+  registerFont(`./public/OutfitBold.ttf`, { family: "Outfit" });
 
   const containterWidth = 1200;
   const containterHeight = 624;
@@ -47,7 +49,7 @@ const generatePreviewImage = async (photo: Photo, isTemporary = false) => {
   const logoWidth = (198 / 51) * logoHeight;
   ctx.drawImage(logo, 300 - logoWidth / 2, 30, logoWidth, logoHeight);
 
-  ctx.font = "bold 48px Arial";
+  ctx.font = /[\u4e00-\u9fff]/.test(photo.name) ? "bold 48px Helvetica" : "48px Outfit";
   ctx.fillStyle = "white";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
@@ -86,7 +88,7 @@ const generatePreviewImage = async (photo: Photo, isTemporary = false) => {
       iconWidth,
       iconWidth
     );
-    ctx.font = "bold 28px Arial";
+    ctx.font = "28px Outfit";
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
