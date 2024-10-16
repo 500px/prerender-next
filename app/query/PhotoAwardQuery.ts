@@ -16,6 +16,14 @@ const photoAwardQuery = `
           id
           username
           displayName
+          avatar {
+            images(sizes: [MEDIUM]) {
+              url
+            }
+          }
+        }
+        pulse {
+          highest
         }
         contentStreams {
           __typename

@@ -41,3 +41,14 @@ export function getLines(
   lines.push(currentLine);
   return lines;
 }
+
+export function getEllipsisText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  maxWidth: number
+) {
+  if (ctx.measureText(text).width < maxWidth) {
+    return text;
+  }
+  return text.slice(0, 16) + "...";
+}

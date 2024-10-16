@@ -95,17 +95,18 @@ const PhotoDetail = async ({
   params: { id: string };
   searchParams: { flag: string };
 }) => {
+  return <></>;
   // 以下用于测试生成的预览图，后续删除
-  const { photo } = await graphqlQuery(photoAwardQuery, {
-    photoLegacyId: params.id,
-    resourceType: "Photo",
-  });
-  const url = await generatePreviewImage(photo, true);
-  return (
-    <>
-      <img src={url} alt={photo.name} />
-    </>
-  );
+  // const { photo } = await graphqlQuery(photoAwardQuery, {
+  //   photoLegacyId: params.id,
+  //   resourceType: "Photo",
+  // });
+  // const url = await generatePreviewImage(photo, true);
+  // return (
+  //   <>
+  //     <img src={url} alt={photo.name} />
+  //   </>
+  // );
 };
 
 export default PhotoDetail;
