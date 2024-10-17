@@ -46,10 +46,23 @@ export function getEllipsisText(
   ctx: CanvasRenderingContext2D,
   text: string,
   maxWidth: number,
-  maxLength: number
+  alwaysEllipsis: boolean = false
 ) {
-  if (ctx.measureText(text).width < maxWidth) {
-    return text;
+  var width = ctx.measureText(text).width;
+  var ellipsis = "…";
+  var ellipsisWidth = ctx.measureText(ellipsis).width;
+
+  if (
+    width <= maxWidth - (alwaysEllipsis ? ellipsisWidth : 0) ||
+    width <= ellipsisWidth
+  ) {
+    return text + (alwaysEllipsis ? ellipsis : "");
+  } else {
+    var len = text.length;
+    while (width >= maxWidth - ellipsisWidth && len-- > 0) {
+      text = text.substring(0, len);
+      width = ctx.measureText(text).width;
+    }
+    return text + ellipsis;
   }
-  return text.slice(0, maxLength) + "...";
 }

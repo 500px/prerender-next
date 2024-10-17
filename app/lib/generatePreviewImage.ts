@@ -105,7 +105,7 @@ const generatePreviewImage = async (photo: Photo, isTemporary = false) => {
   if (isFeatured) {
     badges.push({
       text: "Editors' Choice",
-      icon: `${baseUrl}/featured.svg`,
+      icon: `${baseUrl}/editors-choice.svg`,
       iconX: 96 * 2,
     });
   }
@@ -135,7 +135,6 @@ const generatePreviewImage = async (photo: Photo, isTemporary = false) => {
   const uploaderNameMaxWidth =
     containterWidth / 2 - uploaderNameLeft - containerPadding;
   ctx.font = getFont(uploaderName, largeFontSize, true);
-  ctx.textBaseline = "top";
   const uploaderNameLines = getLines(ctx, uploaderName, uploaderNameMaxWidth);
 
   const infoBaseBottom =
@@ -143,26 +142,7 @@ const generatePreviewImage = async (photo: Photo, isTemporary = false) => {
   const infoBaseTop = containerPadding + logoHeight;
   const infoBaseCenter = (infoBaseBottom - infoBaseTop) / 2 + infoBaseTop;
   const infoBaseLine =
-    uploaderNameLines.length >= 2 ? infoBaseCenter - 20 : infoBaseCenter;
-
-  const uploaderAvatarImage = await loadImage(uploaderAvatar);
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(containerPadding + 24, infoBaseLine + 24, 24, 0, 2 * Math.PI);
-  ctx.clip();
-  ctx.drawImage(uploaderAvatarImage, containerPadding, infoBaseLine, 48, 48);
-  ctx.restore();
-
-  uploaderNameLines.slice(0, 2).map((text, i) => {
-    const twoLineText =
-      uploaderNameLines.length > 2 ? text.slice(0, 18) + "..." : text;
-    ctx.fillText(
-      i === 0 ? text : twoLineText,
-      uploaderNameLeft,
-      infoBaseLine + 40 * i,
-      containterWidth / 2
-    );
-  });
+    uploaderNameLines.length >= 2 ? infoBaseCenter - 24 : infoBaseCenter;
 
   // title
   ctx.font = getFont(photo.name, baseFontSize, false);
@@ -173,13 +153,37 @@ const generatePreviewImage = async (photo: Photo, isTemporary = false) => {
     getEllipsisText(
       ctx,
       photo.name,
-      containterWidth / 2 - containerPadding * 2,
-      30
+      containterWidth / 2 - containerPadding * 2
     ),
     containerPadding,
     infoBaseLine - 12,
     containterWidth / 2
   );
+
+  const uploaderAvatarImage = await loadImage(uploaderAvatar);
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(containerPadding + 24, infoBaseLine + 24, 24, 0, 2 * Math.PI);
+  ctx.clip();
+  ctx.drawImage(uploaderAvatarImage, containerPadding, infoBaseLine, 48, 48);
+  ctx.restore();
+
+  uploaderNameLines.slice(0, 2).map((text, i) => {
+    const ellipsisText = getEllipsisText(
+      ctx,
+      uploaderNameLines[1],
+      uploaderNameMaxWidth,
+      true
+    );
+    ctx.font = getFont(uploaderName, largeFontSize, true);
+    ctx.textBaseline = "middle";
+    ctx.fillText(
+      uploaderNameLines.length > 2 && i === 1 ? ellipsisText : text,
+      uploaderNameLeft,
+      infoBaseLine + 24 + 40 * i,
+      containterWidth / 2
+    );
+  });
 
   if (isTemporary) {
     return canvas.toDataURL("image/jpeg");
