@@ -1,9 +1,10 @@
 import { createCanvas, loadImage, registerFont } from "canvas";
 import graphqlQuery from "../lib/graphqlQuery";
 import { dataURItoBlob, getLines, getEllipsisText } from "../lib/utils";
-import createPhotoMutation from "../query/CreatePhotoMutation";
+import createSharePhotoMutation from "../query/CreateSharePhotoMutation";
 
 interface Photo {
+  legacyId: string;
   images: { url: string }[];
   contentStreams: {
     __typename: string;
@@ -192,13 +193,13 @@ const generatePreviewImage = async (photo: Photo, isTemporary = false) => {
   const dataURL = canvas.toDataURL("image/jpeg");
   const file = dataURItoBlob(dataURL);
 
-  const { createPhoto } = await graphqlQuery(createPhotoMutation, {
+  const { createSharePhoto } = await graphqlQuery(createSharePhotoMutation, {
     input: {
-      autoPublish: false,
-    },
+      legacyId: photo.legacyId,
+    }
   });
-  const { directUpload } = createPhoto;
-  const { url, fields } = directUpload;
+  const { directUpload } = createSharePhoto;
+  const { url, fields, overtShareUrl } = directUpload;
 
   const formData = new FormData();
   const fieldsObj = JSON.parse(fields);
@@ -206,19 +207,18 @@ const generatePreviewImage = async (photo: Photo, isTemporary = false) => {
     formData.append(key, fieldsObj[key]);
   });
   formData.append("file", file);
-  console.log(fieldsObj.key);
 
   try {
     const res = await fetch(url, {
       method: "POST",
       body: formData,
     });
-    console.log(res);
+    console.log("success", res);
   } catch (err) {
     console.log("error", err);
   }
 
-  return dataURL;
+  return overtShareUrl;
 };
 
 export default generatePreviewImage;

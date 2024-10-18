@@ -21,7 +21,7 @@ export async function generateMetadata(
   });
 
   const imageURL = flag
-    ? await generatePreviewImage(photo, true)
+    ? await generatePreviewImage(photo)
     : photo?.images?.[0]?.url;
 
   const url = flag
@@ -96,16 +96,17 @@ const PhotoDetail = async ({
   searchParams: { flag: string };
 }) => {
   // 以下用于测试生成的预览图，后续删除
-  const { photo } = await graphqlQuery(photoAwardQuery, {
-    photoLegacyId: params.id,
-    resourceType: "Photo",
-  });
-  const url = await generatePreviewImage(photo, true);
-  return (
-    <>
-      <img src={url} alt={photo.name} />
-    </>
-  );
+  // const { photo } = await graphqlQuery(photoAwardQuery, {
+  //   photoLegacyId: params.id,
+  //   resourceType: "Photo",
+  // });
+  // const url = await generatePreviewImage(photo, true);
+  // return (
+  //   <>
+  //     <img src={url} alt={photo.name} />
+  //   </>
+  // );
+  return <></>;
 };
 
 export default PhotoDetail;
