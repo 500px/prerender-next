@@ -14,6 +14,7 @@ export async function generateMetadata(
   },
   parent: ResolvingMetadata
 ): Promise<Metadata> {
+  console.log('coming', params.id, searchParams.flag);
   const flag = searchParams?.flag === "1";
   const { photo } = await graphqlQuery(flag ? photoAwardQuery : photoQuery, {
     photoLegacyId: params.id,
@@ -96,16 +97,16 @@ const PhotoDetail = async ({
   searchParams: { flag: string };
 }) => {
   // 以下用于测试生成的预览图，后续删除
-  // const { photo } = await graphqlQuery(photoAwardQuery, {
-  //   photoLegacyId: params.id,
-  //   resourceType: "Photo",
-  // });
-  // const url = await generatePreviewImage(photo, true);
-  // return (
-  //   <>
-  //     <img src={url} alt={photo.name} />
-  //   </>
-  // );
+  const { photo } = await graphqlQuery(photoAwardQuery, {
+    photoLegacyId: params.id,
+    resourceType: "Photo",
+  });
+  const url = await generatePreviewImage(photo, true);
+  return (
+    <>
+      <img src={url} alt={photo.name} />
+    </>
+  );
   return <></>;
 };
 
